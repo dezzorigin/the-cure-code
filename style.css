@@ -1,0 +1,141 @@
+/* the cure — lyrics typed as code. dark editor, no dependencies. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: #000;
+  color: #d4d4d4;
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  overflow: hidden;
+}
+
+.stage {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.editor {
+  width: min(760px, 100%);
+  background: #000;
+  border: 1px solid #1c1c1c;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(255, 45, 85, 0.07), 0 0 120px rgba(0, 0, 0, 0.9);
+}
+
+.tabbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0d0d0d;
+  border-bottom: 1px solid #1c1c1c;
+  padding: 0 8px 0 0;
+  user-select: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #000;
+  border-right: 1px solid #1c1c1c;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #e6e6e6;
+}
+
+.tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff2d55;
+  box-shadow: 0 0 8px #ff2d55;
+}
+
+.tab-x { color: #666; margin-left: 6px; }
+
+.replay {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #999;
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.replay:hover { color: #fff; border-color: #ff2d55; }
+
+.code-wrap {
+  display: flex;
+  height: 340px;
+  overflow: auto;
+  scrollbar-width: none;
+  padding: 18px 0;
+}
+.code-wrap::-webkit-scrollbar { display: none; }
+
+.gutter {
+  flex: 0 0 auto;
+  text-align: right;
+  padding-right: 14px;
+  padding-left: 16px;
+  color: #333;
+  font-size: clamp(13px, 3.4vw, 19px);
+  line-height: 1.9;
+  user-select: none;
+  white-space: pre;
+}
+
+.code {
+  flex: 1 1 auto;
+  font: inherit;
+  font-size: clamp(13px, 3.4vw, 19px);
+  line-height: 1.9;
+  white-space: pre;
+  padding-right: 24px;
+}
+
+/* syntax colors, matched to the video */
+.kw   { color: #ff6b9d; }  /* why, because, got, and, but, oh */
+.prop { color: #7dd3fc; }  /* stitch, be, is_full_of, its_not, in, to, like, for_me, how */
+.str  { color: #f2e3ac; }  /* "strings" */
+.br   { color: #e5c07b; }  /* { } : ; */
+.par  { color: #ff7b72; }  /* ( ) */
+.com  { color: #6a9955; }  /* // comments */
+.pl   { color: #d4d4d4; }  /* everything else */
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  background: #ff2d55;
+  vertical-align: text-bottom;
+  box-shadow: 0 0 12px rgba(255, 45, 85, 0.9);
+  animation: blink 0.9s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  background: #0d0d0d;
+  border-top: 1px solid #1c1c1c;
+  padding: 8px 14px;
+  font-size: 11px;
+  color: #666;
+  user-select: none;
+}
+
+.hint {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #444;
+  user-select: none;
+}
