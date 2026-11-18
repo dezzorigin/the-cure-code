@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="t d">
+  <title id="t">alur mesin ketik the-cure-code</title>
+  <desc id="d">state machine: mulai, ketik per karakter, jeda baris, selesai lalu loop; kontrol jeda, kecepatan, dan replay dari luar.</desc>
+  <rect width="960" height="420" fill="#000000"/>
+  <text x="480" y="36" fill="#f5f5f5" font-family="monospace" font-size="17" font-weight="bold" text-anchor="middle">mesin ketik — the-cure-code</text>
+  <text x="480" y="58" fill="#666666" font-family="monospace" font-size="12" text-anchor="middle">15 baris lirik · satu karakter ±55 ms · loop tanpa henti</text>
+
+  <!-- states -->
+  <g font-family="monospace" font-size="13" text-anchor="middle">
+    <rect x="40" y="120" width="150" height="64" rx="10" fill="#0d0d0d" stroke="#ff2d55" stroke-width="1.5"/>
+    <text x="115" y="146" fill="#f5f5f5" font-weight="bold">start()</text>
+    <text x="115" y="166" fill="#999999" font-size="11">reset baris + kursor</text>
+
+    <rect x="250" y="120" width="170" height="64" rx="10" fill="#0d0d0d" stroke="#2a2a2a"/>
+    <text x="335" y="146" fill="#ff6b9d" font-weight="bold">typing</text>
+    <text x="335" y="166" fill="#999999" font-size="11">1 karakter / 55 ms</text>
+
+    <rect x="480" y="120" width="170" height="64" rx="10" fill="#0d0d0d" stroke="#2a2a2a"/>
+    <text x="565" y="146" fill="#7dd3fc" font-weight="bold">jeda baris</text>
+    <text x="565" y="166" fill="#999999" font-size="11">380 ms, baris berikut</text>
+
+    <rect x="710" y="120" width="170" height="64" rx="10" fill="#0d0d0d" stroke="#2a2a2a"/>
+    <text x="795" y="146" fill="#f2e3ac" font-weight="bold">done</text>
+    <text x="795" y="166" fill="#999999" font-size="11">jeda 3,2 dtk → loop</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#555555" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+    <line x1="190" y1="152" x2="246" y2="152"/>
+    <line x1="420" y1="152" x2="476" y2="152"/>
+    <line x1="650" y1="152" x2="706" y2="152"/>
+    <path d="M 795 184 L 795 250 L 115 250 L 115 188"/>
+  </g>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#555555"/>
+    </marker>
+  </defs>
+  <text x="795" y="272" fill="#666666" font-family="monospace" font-size="11" text-anchor="middle">loop ke start()</text>
+
+  <!-- controls -->
+  <g font-family="monospace" font-size="12">
+    <rect x="40" y="300" width="270" height="76" rx="10" fill="#0d0d0d" stroke="#1c1c1c"/>
+    <text x="60" y="326" fill="#ff6b9d" font-weight="bold">❚❚ jeda / ▶ lanjut</text>
+    <text x="60" y="348" fill="#999999">bekukan timer, lanjut dari</text>
+    <text x="60" y="366" fill="#999999">posisi yang sama</text>
+
+    <rect x="345" y="300" width="270" height="76" rx="10" fill="#0d0d0d" stroke="#1c1c1c"/>
+    <text x="365" y="326" fill="#7dd3fc" font-weight="bold">kecepatan 0.5× / 1× / 2×</text>
+    <text x="365" y="348" fill="#999999">semua jeda dibagi speed</text>
+    <text x="365" y="366" fill="#999999">ritme, jeda baris, jeda akhir</text>
+
+    <rect x="650" y="300" width="270" height="76" rx="10" fill="#0d0d0d" stroke="#1c1c1c"/>
+    <text x="670" y="326" fill="#f2e3ac" font-weight="bold">↻ replay / klik editor</text>
+    <text x="670" y="348" fill="#999999">start() dari baris 1,</text>
+    <text x="670" y="366" fill="#999999">timer lama dibersihkan</text>
+  </g>
+</svg>

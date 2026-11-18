@@ -11,7 +11,7 @@ const LINES = [
   'oh.because( "my_head" ){ is_full_of: "poison" };',
   'and( "my_heart" ){ is_full_of: "doubt" };',
   'i.got( "toxins" ){ in: "my_bloodstream" };',
-  'you.tried_so_hard( to: "suck_em_out" };',
+  'you.tried_so_hard( to: "suck_em_out" ) };',
   'and( "it_feels" ){ like: "medication" };',
   'and( "its_good" ){ for_me: "im_sure" };',
   'but.it( "it_dont_matter" ){ how: "your_love_feels_anymore" };',
@@ -19,7 +19,7 @@ const LINES = [
   '// the cure — olivia rodrigo',
 ];
 
-const CHAR_MS = 55;      // ms per character
+const CHAR_MS = 55;      // ms per character (at 1x)
 const LINE_PAUSE = 380;  // ms after each line
 const END_PAUSE = 3200;  // ms before looping
 
@@ -29,6 +29,8 @@ const wrapEl = document.getElementById("codeWrap");
 const statusEl = document.getElementById("status");
 const stageEl = document.getElementById("stage");
 const replayBtn = document.getElementById("replay");
+const pauseBtn = document.getElementById("pauseBtn");
+const speedSel = document.getElementById("speedSel");
 
 const TOKEN_RE = /(\/\/.*)|("(?:[^"\\]|\\.)*")|\b(why|because|got|and|but|oh)\b|\b(stitch|be|is_full_of|its_not|in|to|like|for_me|how)\b|([{}:;])|([()])|(.)/g;
 
@@ -58,6 +60,12 @@ function highlight(text) {
 let lineIdx = 0;
 let charIdx = 0;
 let timer = null;
+let paused = false;
+let speed = 1;
+
+function scaled(ms) {
+  return ms / speed;
+}
 
 function render() {
   let html = "";
@@ -84,21 +92,22 @@ function render() {
 }
 
 function tick() {
+  if (paused) return;
   if (lineIdx >= LINES.length) {
     statusEl.textContent = "done — restarting…";
-    timer = setTimeout(start, END_PAUSE);
+    timer = setTimeout(start, scaled(END_PAUSE));
     return;
   }
   const line = LINES[lineIdx];
   if (charIdx < line.length) {
     charIdx++;
     render();
-    timer = setTimeout(tick, CHAR_MS + Math.random() * 30);
+    timer = setTimeout(tick, scaled(CHAR_MS + Math.random() * 30));
   } else {
     lineIdx++;
     charIdx = 0;
     render();
-    timer = setTimeout(tick, LINE_PAUSE);
+    timer = setTimeout(tick, scaled(LINE_PAUSE));
   }
 }
 
@@ -106,15 +115,38 @@ function start() {
   clearTimeout(timer);
   lineIdx = 0;
   charIdx = 0;
-  statusEl.textContent = "typing…";
+  statusEl.textContent = paused ? "paused" : "typing…";
   render();
-  timer = setTimeout(tick, 600);
+  if (!paused) timer = setTimeout(tick, scaled(600));
 }
+
+function setPaused(next) {
+  paused = next;
+  clearTimeout(timer);
+  pauseBtn.innerHTML = paused ? "&#9654; lanjut" : "&#10074;&#10074; jeda";
+  pauseBtn.setAttribute("aria-label", paused ? "lanjutkan animasi" : "jeda animasi");
+  statusEl.textContent = paused ? "paused" : "typing…";
+  if (!paused) timer = setTimeout(tick, scaled(CHAR_MS));
+}
+
+pauseBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  setPaused(!paused);
+});
+
+speedSel.addEventListener("click", (e) => e.stopPropagation());
+speedSel.addEventListener("change", () => {
+  speed = parseFloat(speedSel.value) || 1;
+});
 
 replayBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   start();
 });
-stageEl.addEventListener("click", start);
+stageEl.addEventListener("click", (e) => {
+  // clicks on controls are handled above; anything else restarts
+  if (e.target.closest("button, select, a")) return;
+  start();
+});
 
 start();

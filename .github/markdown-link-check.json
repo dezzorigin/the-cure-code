@@ -1,0 +1,1 @@
+{"aliveStatusCodes":[200,206,301,302,303,307,308],"ignorePatterns":[{"pattern":"^http://localhost"}],"retryCount":2,"retryOn429":true,"timeout":"20s"}
