@@ -1,29 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>the_cure.html — olivia rodrigo</title>
-<link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="the cure — olivia rodrigo, lyrics typed as code. a tiny single-page web app that replays the lyrics-as-code typing animation.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23000'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%23ff2d55'/%3E%3C/svg%3E">
+<title>the-cure-code — lirik diketik seperti kode</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="stage" id="stage">
-    <div class="editor">
-      <div class="tabbar">
-        <div class="tab"><span class="tab-dot"></span>the_cure.html<span class="tab-x">&times;</span></div>
-        <button class="replay" id="replay" type="button">&#8635; replay</button>
-      </div>
-      <div class="code-wrap" id="codeWrap">
-        <div class="gutter" id="gutter" aria-hidden="true"></div>
-        <pre class="code" id="code"></pre>
-      </div>
-      <div class="statusbar">
-        <span>olivia rodrigo &mdash; the cure</span>
-        <span id="status">typing&hellip;</span>
-      </div>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top"><span class="brand-dot"></span>the-cure-code</a>
+      <nav class="nav-links" aria-label="navigasi utama">
+        <a href="#demo">demo</a>
+        <a href="#cara-kerja">cara kerja</a>
+        <a href="#lirik">lirik</a>
+        <a href="#kredit">kredit</a>
+      </nav>
+      <a class="gh-link" href="https://github.com/dezzorigin/the-cure-code" aria-label="Lihat di GitHub" title="Lihat di GitHub">
+        <svg viewBox="0 0 16 16" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
     </div>
-    <p class="hint">tap anywhere to replay</p>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">olivia rodrigo &mdash; the cure</p>
+      <h1>lirik yang diketik<br>seperti <span class="hl">kode</span>.</h1>
+      <p class="sub">bridge + chorus &ldquo;the cure&rdquo; ditulis ulang jadi pseudo-code, lalu
+      diketik baris demi baris di editor gelap — dengan syntax highlight,
+      kursor pink, dan loop tanpa henti. tanpa dependensi, tanpa audio,
+      cuma html + css + js.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#demo">&#9654; tonton ketikannya</a>
+        <a class="btn btn-ghost" href="https://github.com/dezzorigin/the-cure-code">lihat di github</a>
+      </div>
+      <p class="meta">15 baris &middot; &plusmn;45 detik per putaran &middot; 5 kb</p>
+    </section>
+
+    <section class="demo" id="demo" aria-label="demo editor">
+      <div class="editor" id="stage">
+        <div class="tabbar">
+          <div class="tab"><span class="tab-dot"></span>the_cure.html<span class="tab-x">&times;</span></div>
+          <div class="controls">
+            <button class="ctl" id="pauseBtn" type="button" aria-label="jeda atau lanjutkan animasi">&#10074;&#10074; jeda</button>
+            <label class="speed">kecepatan
+              <select id="speedSel">
+                <option value="0.5">0.5&times;</option>
+                <option value="1" selected>1&times;</option>
+                <option value="2">2&times;</option>
+              </select>
+            </label>
+            <button class="ctl" id="replay" type="button">&#8635; replay</button>
+          </div>
+        </div>
+        <div class="code-wrap" id="codeWrap">
+          <div class="gutter" id="gutter" aria-hidden="true"></div>
+          <pre class="code" id="code"></pre>
+        </div>
+        <div class="statusbar">
+          <span>olivia rodrigo &mdash; the cure</span>
+          <span id="status">typing&hellip;</span>
+        </div>
+      </div>
+      <p class="hint">klik editor untuk mengulang dari awal</p>
+    </section>
+
+    <section class="section" id="cara-kerja">
+      <h2>cara kerja</h2>
+      <div class="steps">
+        <article class="card">
+          <p class="step-no">01</p>
+          <h3>tokenize</h3>
+          <p>setiap baris lirik dipecah jadi token — keyword pink, properti biru,
+          string krem, komentar hijau — persis pewarnaan di video aslinya.</p>
+        </article>
+        <article class="card">
+          <p class="step-no">02</p>
+          <h3>ketik per karakter</h3>
+          <p>satu karakter tiap &plusmn;55 ms dengan jeda acak kecil, lalu jeda
+          380 ms di akhir baris. kursor blok pink berkedip mengikuti ketikan.</p>
+        </article>
+        <article class="card">
+          <p class="step-no">03</p>
+          <h3>loop</h3>
+          <p>setelah baris terakhir, animasi diam 3,2 detik lalu mulai lagi dari
+          nol. klik di mana saja di editor (atau tombol replay) untuk mengulang
+          kapan pun.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="lirik">
+      <h2>lirik — sebagai kode</h2>
+      <p class="section-sub">bridge + chorus &ldquo;the cure&rdquo;, ditulis ulang jadi pseudo-code.
+      ditranskrip dari video tiktok <a href="https://www.tiktok.com/@idfcauuu/video/7706215484160625926">@idfcauuu</a>.</p>
+      <pre class="lines"><code>why.cant( "you_come" ){ stitch: "me_up" };
+why.cant( "it_ever" ){ be: "enough" };
+why.cant( "you_come" ){ stitch: "me_up" };
+why.cant( "it_ever" ){ be: "enough" };
+// by nabil
+{ its_not: "enough" };
+oh.because( "my_head" ){ is_full_of: "poison" };
+and( "my_heart" ){ is_full_of: "doubt" };
+i.got( "toxins" ){ in: "my_bloodstream" };
+you.tried_so_hard( to: "suck_em_out" ) };
+and( "it_feels" ){ like: "medication" };
+and( "its_good" ){ for_me: "im_sure" };
+but.it( "it_dont_matter" ){ how: "your_love_feels_anymore" };
+itll_never_be( "the_cure" );
+// the cure — olivia rodrigo</code></pre>
+    </section>
+
+    <section class="section" id="fitur">
+      <h2>kenapa sesederhana ini</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>tanpa dependensi</h3>
+          <p>html + css + js polos. tidak ada framework, tidak ada build step,
+          tidak ada request ke mana-mana.</p>
+        </article>
+        <article class="card">
+          <h3>jalan di mana saja</h3>
+          <p>buka file-nya langsung, atau serve statis apa pun. offline pun
+          jalan, font fallback monospace sistem.</p>
+        </article>
+        <article class="card">
+          <h3>kontrol penuh</h3>
+          <p>jeda, ubah kecepatan 0.5&times;–2&times;, atau replay kapan pun —
+          tanpa reload halaman.</p>
+        </article>
+        <article class="card">
+          <h3>jujur soal audio</h3>
+          <p>tidak ada audio di repo ini. ini animasi ketik, bukan pemutar lagu —
+          liriknya yang jadi bintangnya.</p>
+        </article>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer" id="kredit">
+    <p>lagu: &ldquo;the cure&rdquo; — olivia rodrigo, dari album <em>you seem pretty sad for a girl so in love</em> (2026).</p>
+    <p>format terinspirasi <a href="https://www.tiktok.com/@idfcauuu/video/7706215484160625926">@idfcauuu</a> di tiktok.</p>
+    <p>the-cure-code &middot; dibuat oleh <a href="https://github.com/dezzorigin">dezzorigin</a> &middot; lisensi MIT</p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

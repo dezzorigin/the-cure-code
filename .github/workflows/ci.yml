@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: check js syntax
+        run: node --check script.js
+
+      - name: check lyric lines count (must stay 15)
+        run: |
+          n=$(grep -c "^  '" script.js)
+          echo "lyric lines: $n"
+          test "$n" -eq 15
+
+      - name: install html-validate
+        run: npm install -g html-validate@9
+
+      - name: validate html
+        run: html-validate index.html
+
+      - name: check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: "yes"
+          config-file: ".github/markdown-link-check.json"
